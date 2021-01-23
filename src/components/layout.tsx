@@ -1,13 +1,12 @@
 import { FunctionComponent, ReactNode } from "react";
 import Link from "next/link";
-// import { useAuth } from "src/auth/useAuth";
+import { useAuth } from "src/auth/useAuth";
 interface Iprops {
   main: ReactNode
 }
 
 const Layout: FunctionComponent<Iprops> = ({ main }) => {
-  const authenticated = false
-  const logout = () => null
+  const { authenticated, logout } = useAuth()
   return <div className="bg-gray-900 max-w-screen-2xl mx-auto text-white">
     <nav className="bg-gray-800" style={{ height: '64px' }}>
       <div className="px-6 flex items-center justify-between h-16">
