@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 // import { useRouter } from "next/router";
 // import Link from "next/link";
 // import { Image } from "cloudinary-react";
-// import { SearchBox } from "./searchBox";
+import { SearchBox } from "./searchBox";
 // import {
 //   CreateHouseMutation,
 //   CreateHouseMutationVariables,
@@ -15,47 +15,54 @@ import { useForm } from "react-hook-form";
 // } from "src/generated/UpdateHouseMutation";
 // import { CreateSignatureMutation } from "src/generated/CreateSignatureMutation";
 
-
 interface IFormData {
   address: string;
   latitude: number;
-  logitude: number;
+  longitude: number;
   bedrooms: string;
   image: FileList;
 }
 
-interface IProps {
+interface IProps {}
 
-}
-
-export default function HouseForm({ }: IProps) {
-  const [submitting, setSubmitting] = useState<boolean>(false)
-  const { register, handleSubmit, setValue, errors, watch } = useForm<IFormData>({
-    defaultValues: {}
-  })
-
+export default function HouseForm({}: IProps) {
+  const [submitting, setSubmitting] = useState<boolean>(false);
+  const { register, handleSubmit, setValue, errors, watch } = useForm<
+    IFormData
+  >({
+    defaultValues: {},
+  });
+  const address = watch("address");
   useEffect(() => {
-    register({ name: 'address' }, { required: "Please enter your address!" })
-    register({ name: 'latitude' }, { required: true, min: -90, max: 90 })
-    register({ name: 'logitude' }, { required: true, min: -180, max: -180 })
-  }, [register])
+    register({ name: "address" }, { required: "Please enter your address!" });
+    register({ name: "latitude" }, { required: true, min: -90, max: 90 });
+    register({ name: "longitude" }, { required: true, min: -180, max: -180 });
+  }, [register]);
 
-  const handleCreate = async (data: IFormData) => {
-
-  }
+  const handleCreate = async (data: IFormData) => {};
 
   const onSubmit = (data: IFormData) => {
-    setSubmitting(true)
-    handleCreate(data)
-  }
+    setSubmitting(true);
+    handleCreate(data);
+  };
   return (
     <form className="mx-auto max-w-xl py-4" onSubmit={handleSubmit(onSubmit)}>
       <h1>Add a new Hose</h1>
       <div className="mt-4">
-        <label htmlFor="search" className="block">Search for your address</label>
-        {/* SEARCH FIELD */}
+        <label htmlFor="search" className="block">
+          Search for your address
+        </label>
+        <SearchBox
+          defaultValue=""
+          onSelectAddress={(address, latitude, longitude) => {
+            setValue("address", address);
+            setValue("latitude", latitude);
+            setValue("longitude", longitude);
+          }}
+        />
         {errors.address && <p>{errors.address.message}</p>}
+        <h2>{address}</h2>
       </div>
     </form>
-  )
+  );
 }

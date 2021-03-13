@@ -7,19 +7,15 @@ import "mapbox-gl/dist/mapbox-gl.css";
 // import { HousesQuery_houses } from "src/generated/HousesQuery";
 // import { SearchBox } from "./searchBox";
 
-interface Iprops {
+interface Iprops {}
 
-}
-
-export default function Map({ }: Iprops) {
-  const mapRef = useRef<ReactMapGL | null>(null)
+export default function Map({}: Iprops) {
+  const mapRef = useRef<ReactMapGL | null>(null);
   const [viewport, setViewport] = useState<ViewState>({
     latitude: 6.217,
     longitude: -75.567,
-    zoom: 10
-  })
-
-
+    zoom: 10,
+  });
 
   return (
     <div className="text-black relative">
@@ -28,12 +24,12 @@ export default function Map({ }: Iprops) {
         width="100%"
         height="calc(100vh - 64px)"
         mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
-        onViewportChange={nextViewport => setViewport(nextViewport)}
-        ref={instance => mapRef.current = instance}
+        onViewportChange={(nextViewport) => setViewport(nextViewport)}
+        ref={(instance) => (mapRef.current = instance)}
         minZoom={5}
         maxZoom={15}
         mapStyle="mapbox://styles/leighhalliday/ckhjaksxg0x2v19s1ovps41ef"
       ></ReactMapGL>
     </div>
-  )
+  );
 }
