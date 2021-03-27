@@ -9,16 +9,21 @@ import Map from "src/components/map";
 // import { HousesQuery, HousesQueryVariables } from "src/generated/HousesQuery";
 
 export default function Home() {
-  return <Layout main={
-    <div className="flex">
-      <div
-        className="w-1/2 pb-4"
-        style={{ maxHeight: 'calc(100vh - 64px)', overflowX: 'scroll' }}>
-        House map
-    </div>
-      <div className="w-1/2">
-        <Map />
-      </div>
-    </div>
-  } />;
+  return (
+    <Layout
+      main={
+        <div className="flex">
+          <div
+            className="w-1/2 pb-4"
+            style={{ maxHeight: "calc(100vh - 64px)", overflowX: "scroll" }}
+          >
+            HouseList
+          </div>
+          <div className="w-1/2">
+            <Map />
+          </div>
+        </div>
+      }
+    />
+  );
 }
