@@ -1,11 +1,10 @@
 import { useState, useEffect, ChangeEvent, Fragment } from "react";
 import { useForm } from "react-hook-form";
-// import { useMutation, gql } from "@apollo/client";
+import { useMutation, gql } from "@apollo/client";
 // import { useRouter } from "next/router";
 import Link from "next/link";
 // import { Image } from "cloudinary-react";
 import { SearchBox } from "./searchBox";
-import { doTypesOverlap } from "graphql";
 // import {
 //   CreateHouseMutation,
 //   CreateHouseMutationVariables,
@@ -14,8 +13,38 @@ import { doTypesOverlap } from "graphql";
 //   UpdateHouseMutation,
 //   UpdateHouseMutationVariables,
 // } from "src/generated/UpdateHouseMutation";
-// import { CreateSignatureMutation } from "src/generated/CreateSignatureMutation";
+import { CreateSignatureMutation } from "src/generated/CreateSignatureMutation";
 
+const SIGNATURE_MUTATION = gql`
+  mutation CreateSignatureMutation {
+    createImageSignature {
+      signature
+      timestamp
+    }
+  }
+`;
+
+interface IUploadImageResponse {
+  secure_url: string;
+}
+
+async function uploadImage(
+  image: File,
+  signature: string,
+  timestamp: number
+): Promise<IUploadImageResponse> {
+  const url = `	https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`;
+  const formData = new FormData();
+  formData.append("file", image);
+  formData.append("signature", signature);
+  formData.append("timestamp", timestamp.toString());
+  formData.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_KEY ?? "");
+  const response = await fetch(url, {
+    method: "POST",
+    body: formData,
+  });
+  return response.json();
+}
 interface IFormData {
   address: string;
   latitude: number;
@@ -26,26 +55,31 @@ interface IFormData {
 
 interface IProps {}
 
-// TODO:
-// The form doesn't work in onSubmit
-
 export default function HouseForm({}: IProps) {
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const [previewImage, setPreviewImage] = useState<string>("");
+  const [previewImage, setPreviewImage] = useState<string>();
   const { register, handleSubmit, setValue, errors, watch } = useForm<
     IFormData
-  >({
-    defaultValues: {},
-  });
+  >({ defaultValues: {} });
   const address = watch("address");
+
+  const [createSignature] = useMutation<CreateSignatureMutation>(
+    SIGNATURE_MUTATION
+  );
   useEffect(() => {
     register({ name: "address" }, { required: "Please enter your address!" });
     register({ name: "latitude" }, { required: true, min: -90, max: 90 });
-    register({ name: "longitude" }, { required: true, min: -180, max: -180 });
+    register({ name: "longitude" }, { required: true, min: -180, max: 180 });
   }, [register]);
 
   const handleCreate = async (data: IFormData) => {
-    console.log(data);
+    const { data: signatureData } = await createSignature();
+    if (signatureData) {
+      const {
+        createImageSignature: { signature, timestamp },
+      } = signatureData;
+      const imageData = await uploadImage(data.image[0], signature, timestamp);
+    }
   };
 
   const onSubmit = (data: IFormData) => {
