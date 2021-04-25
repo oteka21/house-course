@@ -45,7 +45,7 @@ export default function SingleMap({ house, nearby }: IProps) {
           offsetTop={-15}
         >
           <button type="button">
-            <img src="/home-solid.svg" className="w-8" alt="selected house" />
+            <img src="/home-color.svg" className="w-8" alt="selected house" />
           </button>
         </Marker>
 
@@ -60,7 +60,7 @@ export default function SingleMap({ house, nearby }: IProps) {
             <Link href={`/houses/${near.id}`}>
               <a style={{ width: "30px", height: "30px", fontSize: "30px" }}>
                 <img
-                  src="/home-color.svg"
+                  src="/home-solid.svg"
                   className="w-8"
                   alt="selected house"
                 />
