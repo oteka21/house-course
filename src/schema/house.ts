@@ -16,7 +16,6 @@ import { Min, Max, max } from "class-validator";
 import { getBoundsOfDistance } from "geolib";
 import { Context, AuthorizedContext } from "./context";
 
-// export {};
 @InputType()
 class CoordinatesInput {
   @Min(-90)
@@ -27,6 +26,14 @@ class CoordinatesInput {
   @Max(180)
   @Field((_type) => Float)
   longitude!: number;
+}
+@InputType()
+class BoundsInput {
+  @Field((_type) => CoordinatesInput)
+  sw!: CoordinatesInput;
+
+  @Field((_Type) => CoordinatesInput)
+  ne!: CoordinatesInput;
 }
 
 @InputType()
@@ -88,6 +95,22 @@ export class HouseResolver {
       where: {
         id: parseInt(id, 10),
       },
+    });
+  }
+  @Query((_returns) => [House], { nullable: false })
+  async houses(@Arg("bounds") bounds: BoundsInput, @Ctx() ctx: Context) {
+    return ctx.prisma.house.findMany({
+      where: {
+        latitude: {
+          gte: bounds.sw.latitude,
+          lte: bounds.ne.latitude,
+        },
+        longitude: {
+          gte: bounds.sw.longitude,
+          lte: bounds.ne.longitude,
+        },
+      },
+      take: 50,
     });
   }
   @Authorized()

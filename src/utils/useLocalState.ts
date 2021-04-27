@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 
-export function useLocalState<S = undefined>(key: string, initialValue: S) {
+export function useLocalState<S = undefined>(key: string, initial: S) {
   const [value, setValue] = useState<S>(() => {
     if (typeof window !== "undefined" && window.localStorage) {
       const saved = window.localStorage.getItem(key);
       if (saved) {
         return JSON.parse(saved);
       }
-
-      return initialValue;
     }
+
+    return initial;
   });
 
   useEffect(() => {
