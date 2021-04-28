@@ -10,9 +10,10 @@ import { HousesQuery_houses } from "src/generated/HousesQuery";
 interface Iprops {
   setDataBounds: (bounds: string) => void;
   houses: HousesQuery_houses[];
+  highlightedId: string | null;
 }
 
-export default function Map({ setDataBounds, houses }: Iprops) {
+export default function Map({ setDataBounds, houses, highlightedId }: Iprops) {
   const [selected, setSelected] = useState<HousesQuery_houses | null>(null);
   const mapRef = useRef<ReactMapGL | null>(null);
   const [viewport, setViewport] = useLocalState<ViewState>("viewport", {
@@ -53,15 +54,25 @@ export default function Map({ setDataBounds, houses }: Iprops) {
             longitude={house.longitude}
             offsetLeft={-15}
             offsetTop={-15}
+            className={highlightedId === house.id ? "marker-active" : ""}
           >
             <button
               style={{ width: "30px", height: "30px", fontSize: "30px" }}
               onClick={() => setSelected(house)}
             >
-              <img src="/home-solid.svg" alt="house" className="w-8" />
+              <img
+                src={
+                  highlightedId === house.id
+                    ? "home-color.svg"
+                    : "/home-solid.svg"
+                }
+                alt="house"
+                className="w-8"
+              />
             </button>
           </Marker>
         ))}
+
         {selected && (
           <Popup
             latitude={selected.latitude}
