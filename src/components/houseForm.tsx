@@ -201,7 +201,7 @@ export default function HouseForm({ house }: IProps) {
   return (
     <form className="mx-auto max-w-xl py-4" onSubmit={handleSubmit(onSubmit)}>
       <h1>
-        {house ? `Editing ${house.address}` : "Add a New Hose"} a new Hose
+        {house ? `Editing ${house.address}` : "Add a New Hose"} a new House
       </h1>
       <div className="mt-4">
         <label htmlFor="search" className="block">

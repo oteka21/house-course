@@ -5,9 +5,6 @@ import {
   Resolver,
   Mutation,
   Authorized,
-  // Resolver,
-  // Mutation,
-  // Authorized,
 } from "type-graphql";
 const cloudinary = require("cloudinary").v2;
 
